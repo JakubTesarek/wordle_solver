@@ -1,19 +1,6 @@
-import pathlib
 import collections
-import functools
 import string
-from wordler import TileResult
-
-wordlist_path = pathlib.Path('words.txt')
-
-
-@functools.cache
-def get_words():
-    words = []
-    with wordlist_path.open() as wordlist:
-        for word in wordlist:
-            words.append(word.strip())
-    return words
+from wordler import TileResult, get_words
 
 
 class Solver:
@@ -102,4 +89,3 @@ class Solver:
                     self.correct_letters[index] = letter    
                 case _:
                     raise ValueError('Tile result must be an instance of TileResult.')
-                

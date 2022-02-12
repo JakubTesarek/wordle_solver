@@ -1,5 +1,6 @@
+from wordler import get_words
 from wordler.ui import UI
-from wordler.solver import Solver, get_words
+from wordler.solver import Solver
 
 
 class Game:

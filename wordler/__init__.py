@@ -1,4 +1,18 @@
+import pathlib
 import enum
+import functools
+
+
+wordlist_path = pathlib.Path('words.txt')
+
+
+@functools.cache
+def get_words():
+    words = []
+    with wordlist_path.open() as wordlist:
+        for word in wordlist:
+            words.append(word.strip())
+    return words
 
 
 class TileResult(enum.Enum):
@@ -8,6 +22,7 @@ class TileResult(enum.Enum):
 
     def __bool__(self):
         return self is TileResult.CORRECT
+
 
 class WordResult:
     def __init__(self, word, tile_results):
