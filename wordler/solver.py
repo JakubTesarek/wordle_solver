@@ -14,12 +14,11 @@ def get_words():
             words.append(word.strip())
     return words
 
-
 class Solver:
     def __init__(self):
         self.present_letters = {}
-        self.positioned_letters = {}
-        self.missing_letters = set()
+        self.correct_letters = {}
+        self.absent_letters = set()
         self.attempted_words = set()
 
     def letter_frequency(self, words):
@@ -37,14 +36,6 @@ class Solver:
         return set(word)
 
     @property
-    def encountered_letters(self):
-        return set.union(
-            set(self.present_letters.keys()),
-            self.missing_letters,
-            set(self.positioned_letters.values())
-        )
-
-    @property
     def attempts(self):
         return len(self.attempted_words)
 
@@ -58,7 +49,7 @@ class Solver:
         if word in self.attempted_words:
             return False  # tested before
 
-        for letter in self.missing_letters:
+        for letter in self.absent_letters:
             if letter in word:
                 return False  # contains letter that is not present
             
@@ -70,7 +61,7 @@ class Solver:
                 if word[position] == letter:
                     return False  # present letter is on the same position
 
-        for index, letter in self.positioned_letters.items():
+        for index, letter in self.correct_letters.items():
             if word[index] != letter:
                 return False  # missing letter on known position
 
@@ -97,14 +88,13 @@ class Solver:
 
         return candidate_word
 
-
     def add_result(self, word, result):
         self.attempted_words.add(word)
         for index, (letter, occurence) in enumerate(zip(word, result)):
             if occurence == '0':
-                self.missing_letters.add(letter)
+                self.absent_letters.add(letter)
             elif occurence == '1':
                 tested_positions = self.present_letters.setdefault(letter, [])
                 tested_positions.append(index)
             else:
-                self.positioned_letters[index] = letter
+                self.correct_letters[index] = letter
