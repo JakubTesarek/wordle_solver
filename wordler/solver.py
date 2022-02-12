@@ -29,9 +29,8 @@ class Solver:
             for letter in word:
                 freq[letter] += 1
 
-        total = sum(freq.values())
         for letter in freq.keys():
-            freq[letter] /= total
+            freq[letter] /= freq.total()
         return freq
 
     def unique_letters(self, word):
