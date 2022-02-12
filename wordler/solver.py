@@ -93,10 +93,14 @@ class Solver:
     def add_result(self, result):
         self.attempted_words.add(result.word)
         for index, letter, occurence in result.results:
-            if occurence == TileResult.ABSENT:
-                self.absent_letters.add(letter)
-            elif occurence == TileResult.PRESENT:
-                tested_positions = self.present_letters.setdefault(letter, [])
-                tested_positions.append(index)
-            else:
-                self.correct_letters[index] = letter
+            match (occurence):
+                case TileResult.ABSENT:
+                    self.absent_letters.add(letter)
+                case TileResult.PRESENT:
+                    tested_positions = self.present_letters.setdefault(letter, [])
+                    tested_positions.append(index)
+                case TileResult.CORRECT:
+                    self.correct_letters[index] = letter    
+                case _:
+                    raise ValueError('Tile result must be an instance of TileResult.')
+                
