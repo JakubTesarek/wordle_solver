@@ -1,20 +1,18 @@
 import time
+
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from pyshadow.main import Shadow
 from webdriver_manager.chrome import ChromeDriverManager
 
+from wordler import TileResult, WordResult
+
 
 class UI:
-    result_translation = {
-        'absent': '0',
-        'present': '1',
-        'correct': '2'
-    }
-
     def __init__(self):
         self.driver = webdriver.Chrome(ChromeDriverManager().install())
         self.shadow = Shadow(self.driver)
+        self.last_word = None
 
         self.driver.get('https://www.nytimes.com/games/wordle/index.html')
 
@@ -27,6 +25,7 @@ class UI:
         time.sleep(0.5)
 
     def send_word(self, word):
+        self.last_word = word
         body = self.driver.find_element_by_tag_name('body')
         for letter in word:
             body.send_keys(letter)
@@ -37,9 +36,9 @@ class UI:
     def get_result(self, turn):
         tiles = self.shadow.find_elements('game-app game-row game-tile')
         turn_tiles = tiles[turn*5:turn*5+5]
-        result = ''
+        tile_results = []
         for tile in turn_tiles:
             evaluation = tile.get_attribute('evaluation')
-            result += self.result_translation[evaluation]
+            tile_results.append(TileResult(evaluation))
 
-        return result
+        return WordResult(self.last_word, tile_results)

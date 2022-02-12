@@ -2,6 +2,7 @@ import pathlib
 import collections
 import functools
 import string
+from wordler import TileResult
 
 wordlist_path = pathlib.Path('words.txt')
 
@@ -13,6 +14,7 @@ def get_words():
         for word in wordlist:
             words.append(word.strip())
     return words
+
 
 class Solver:
     def __init__(self):
@@ -88,12 +90,12 @@ class Solver:
 
         return candidate_word
 
-    def add_result(self, word, result):
-        self.attempted_words.add(word)
-        for index, (letter, occurence) in enumerate(zip(word, result)):
-            if occurence == '0':
+    def add_result(self, result):
+        self.attempted_words.add(result.word)
+        for index, letter, occurence in result.results:
+            if occurence == TileResult.ABSENT:
                 self.absent_letters.add(letter)
-            elif occurence == '1':
+            elif occurence == TileResult.PRESENT:
                 tested_positions = self.present_letters.setdefault(letter, [])
                 tested_positions.append(index)
             else:
