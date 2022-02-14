@@ -33,7 +33,7 @@ class UI:
         body = self.driver.find_element_by_tag_name('body')
         for letter in word:
             body.send_keys(letter)
-            time.sleep(0.2)
+            time.sleep(0.3)
         body.send_keys(Keys.ENTER)
         time.sleep(2)
 

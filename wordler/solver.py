@@ -33,12 +33,16 @@ class Solver:
             score += letter_frequency[letter]
         return score
 
+    @property
+    def possibly_duplicated_letters(self):
+        return set(list(self.present_letters.keys()) + list(self.correct_letters.values()))
+
     def matches_constraints(self, word):
         if word in self.attempted_words:
             return False  # tested before
 
         for letter in self.absent_letters:
-            if letter in word:
+            if letter in word and letter not in self.possibly_duplicated_letters:
                 return False  # contains letter that is not present
             
         for letter, positions in self.present_letters.items():
@@ -64,7 +68,6 @@ class Solver:
 
     def get_candidate(self):
         letter_frequency = self.letter_frequency(get_words())
-
         candidate_word = None
         candidate_score = None
 
